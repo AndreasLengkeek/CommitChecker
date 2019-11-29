@@ -9,7 +9,7 @@ import { Commit } from '../models/Commit';
 })
 export class GitHubServiceService {
 
-  private API_BASE_URL = 'https://api.github.com';
+  private API_BASE_URL = 'https://api.github.com/';
 
   constructor(
     private http: HttpClient
@@ -31,15 +31,16 @@ export class GitHubServiceService {
   }
 
   public getUserRepos(username: string): Observable<Repo[]> {
-    return this.http.get<Repo[]>(`${this.API_BASE_URL}/repos/${username}`);
+    console.log('getting user repos for ', username);
+    return this.http.get<Repo[]>(`${this.API_BASE_URL}users/${username}/repos`);
   }
 
-  public getRepoCommitsforCurrentUser(slug: string): Observable<Commit[]> {
+  public getRepoCommitsforCurrentUser(repo: string): Observable<Commit[]> {
     const { username } = this.getAuthentication();
-    return this.getRepoCommitsForUser(slug, username);
+    return this.getRepoCommitsForUser(repo, username);
   }
 
-  public getRepoCommitsForUser(slug: string, username: string): Observable<Commit[]> {
-    return this.http.get<Commit[]>(`${this.API_BASE_URL}/repos/${slug}/commits`);
+  public getRepoCommitsForUser(repo: string, username: string): Observable<Commit[]> {
+    return this.http.get<Commit[]>(`${this.API_BASE_URL}repos/${username}/${repo}/commits`);
   }
 }
